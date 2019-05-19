@@ -89,7 +89,20 @@ fig.savefig('figures/processos_totais_pt2', dpi=100, bbox_inches='tight')
 assuntos = df_assuntos_totais['Assunto']
 assuntos.unique()
 assuntos_valor = assuntos.value_counts()
-assuntos_filtrado = assuntos_valor.loc[assuntos_valor.values > 9]
+assuntos_filtrado_index = assuntos_valor.iloc[assuntos_valor.values > 9].index
+assuntos_filtrado_values = assuntos_valor.iloc[
+                                            assuntos_valor.values > 9].values
+
+assuntos_filtrado = pd.DataFrame({
+    'Assunto': assuntos_filtrado_index,
+    'Frequência': assuntos_filtrado_values
+})
+
+
+ax, fig = render_mpl_table(assuntos_filtrado,
+                           header_columns=0, col_width=7.5)
+fig.savefig('figures/assuntos_filtrados', dpi=100, bbox_inches='tight')
+
 title = "Assuntos CNJ com mais de 10 aparições"
 fig = plt.figure()
 assuntos_filtrado.plot.barh(title=title, edgecolor='black', colors='y')

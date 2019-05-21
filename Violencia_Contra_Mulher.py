@@ -1,5 +1,6 @@
 from datetime import datetime
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 from pathlib import Path
 import re
@@ -9,6 +10,8 @@ import six
 # %% markdown
 # #### Helper para salvar planilha
 # %%
+
+
 def render_mpl_table(data, col_width=3.0, row_height=0.625, font_size=14,
                      header_color='#4a86e8', row_colors=['#f1f1f2', 'w'],
                      edge_color='w', bbox=[0, 0, 1, 1], header_columns=0,
@@ -110,7 +113,7 @@ fig.savefig('figures/{}'.format(title), dpi=100, bbox_inches='tight')
 
 
 # %% markdown
-# ### Uma passada pelos anos
+# ### Uma passada pelos anos_frequencia
 # %%
 anos_lista = []
 assuntos_lista = []
@@ -167,6 +170,54 @@ duracao_andamentos = pd.DataFrame({
     'Duracao (em dias)': duracao_aux
 })
 
-dura_total = duracao_andamentos.sort_values(by='Duracao (em dias)')
-title =
-duracao_andamentos['Duracao (em dias)'].plot.hist(bins=30, edgecolor='black')
+# %% markdown
+# ### Frequência de processos de viol. cont. mulher por ano
+# %%
+
+
+def autolabel(rects, xpos='center'):
+    """
+    Attach a text label above each bar in *rects*, displaying its height.
+
+    *xpos* indicates which side to place the text w.r.t. the center of
+    the bar. It can be one of the following {'center', 'right', 'left'}.
+    """
+
+    ha = {'center': 'center', 'right': 'left', 'left': 'right'}
+    offset = {'center': 0, 'right': 1, 'left': -1}
+
+    for rect in rects:
+        height = rect.get_height()
+        ax.annotate('{}'.format(height),
+                    xy=(rect.get_x() + rect.get_width() / 2, height),
+                    xytext=(offset[xpos]*3, 3),  # use 3 points offset
+                    textcoords="offset points",  # in both directions
+                    ha=ha[xpos], va='bottom')
+
+
+anos_frequencia = pd.DataFrame({
+    'Ano': [2014, 2015, 2016, 2017, 2018],
+    'Proc_ano': [18466, 17366, 11605, 12519, 15075],
+    'Proc_vcm': [407, 972, 1111, 2169, 3786]
+})
+
+anos_frequencia
+
+anos_frequencia['Proc_vcm'].describe()
+
+ind = np.arange(len(anos_frequencia['Proc_vcm']))  # the x locations for the groups
+width = 0.35  # the width of the bars
+
+fig, ax = plt.subplots()
+rects1 = ax.bar(ind - width/2, anos_frequencia['Proc_ano'], width, label='Proc')
+rects2 = ax.bar(ind + width/2, anos_frequencia['Proc_vcm'], width, label='VCM')
+
+ax.set_ylabel('Num Processos')
+ax.set_xticks(ind)
+ax.set_xticklabels(anos_frequencia['Ano'])
+ax.legend()
+autolabel(rects1, "center")
+autolabel(rects2, "center")
+
+plt.show()
+fig.savefig('figures/processos_anos', dpi=100, bbox_inches='tight')

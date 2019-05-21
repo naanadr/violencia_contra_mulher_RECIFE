@@ -5,17 +5,13 @@ import pandas as pd
 from pathlib import Path
 import re
 import six
-%matplotlib inline
-
-# %% markdown
-# #### Helper para salvar planilha
-# %%
 
 
-def render_mpl_table(data, col_width=3.0, row_height=0.625, font_size=14,
-                     header_color='#4a86e8', row_colors=['#f1f1f2', 'w'],
-                     edge_color='w', bbox=[0, 0, 1, 1], header_columns=0,
-                     ax=None, **kwargs):
+# Helper para salvar graficos
+def render_table(data, col_width=3.0, row_height=0.625, font_size=14,
+                 header_color='#4a86e8', row_colors=['#f1f1f2', 'w'],
+                 edge_color='w', bbox=[0, 0, 1, 1], header_columns=0,
+                 ax=None, **kwargs):
     if ax is None:
         size = (np.array(data.shape[::-1]) + np.array([0, 1])) * np.array(
                 [col_width, row_height])
@@ -38,144 +34,8 @@ def render_mpl_table(data, col_width=3.0, row_height=0.625, font_size=14,
     return ax, fig
 
 
-# %% markdown
-# ## Analisando os dados
-# %%
-
-# TODO:
-# ter uma noção da porcentação de processos de violência / processos totais
-
-local_raiz = 'database/'
-local_anos = list(Path(local_raiz).glob('*'))
-
-processos_anos = []
-andamentos_anos = []
-assuntos_anos = []
-
-for local in local_anos:
-    processos_anos.append(list(Path(local).glob('*_comarca_recife.csv'))[0])
-    andamentos_anos.append(list(Path(local).glob('*_andamentos.csv'))[0])
-    assuntos_anos.append(list(Path(local).glob('*_assuntos.csv'))[0])
-
-df_processos = [pd.read_csv(str(processo)) for processo in processos_anos]
-df_andamentos = [pd.read_csv(str(andamento)) for andamento in andamentos_anos]
-df_assuntos = [pd.read_csv(str(assunto)) for assunto in assuntos_anos]
-
-df_processos_totais = pd.concat(df_processos)
-df_andamentos_totais = pd.concat(df_andamentos)
-df_assuntos_totais = pd.concat(df_assuntos)
-
-
-# %% markdown
-# ### Classe CNJ
-# %%
-classe_cnj = df_processos_totais['Classe CNJ']
-classe_cnj.unique()
-
-title = "Frequência das Classes CNJ"
-fig = plt.figure()
-classe_cnj.value_counts().plot.barh(title=title, edgecolor='black',
-                                    colors='y')
-fig.savefig('figures/{}'.format(title), dpi=100, bbox_inches='tight')
-
-
-ax, fig = render_mpl_table(df_assuntos_totais.iloc[:, 1:].head(n=7),
-                           header_columns=0, col_width=5)
-fig.savefig('figures/assuntos_totais_pt1', dpi=100, bbox_inches='tight')
-ax, fig = render_mpl_table(df_processos_totais.iloc[:, 3:].head(n=7),
-                           header_columns=0, col_width=3.5)
-fig.savefig('figures/processos_totais_pt2', dpi=100, bbox_inches='tight')
-
-# %% markdown
-# ### Assunto
-# %%
-assuntos = df_assuntos_totais['Assunto']
-assuntos.unique()
-assuntos_valor = assuntos.value_counts()
-assuntos_filtrado_index = assuntos_valor.iloc[assuntos_valor.values > 9].index
-assuntos_filtrado_values = assuntos_valor.iloc[
-                                            assuntos_valor.values > 9].values
-
-assuntos_filtrado = pd.DataFrame({
-    'Assunto': assuntos_filtrado_index,
-    'Frequência': assuntos_filtrado_values
-})
-
-
-ax, fig = render_mpl_table(assuntos_filtrado,
-                           header_columns=0, col_width=7.5)
-fig.savefig('figures/assuntos_filtrados', dpi=100, bbox_inches='tight')
-
-title = "Assuntos CNJ com mais de 10 aparições"
-fig = plt.figure()
-assuntos_filtrado.plot.barh(title=title, edgecolor='black', colors='y')
-fig.savefig('figures/{}'.format(title), dpi=100, bbox_inches='tight')
-
-
-# %% markdown
-# ### Uma passada pelos anos_frequencia
-# %%
-anos_lista = []
-assuntos_lista = []
-
-for processo in df_assuntos_totais['Numero'].unique():
-    df_assun = df_assuntos_totais[(df_assuntos_totais['Numero'] == processo)]
-    assuntos = df_assun['Assunto'].values
-    processo_corrigido = str(processo).zfill(20)
-    ano = re.match('\d{9}(\d{4})', processo_corrigido).group(1)
-
-    for assunto in assuntos:
-        assuntos_lista.append(assunto)
-        anos_lista.append(ano)
-
-df_assuntos_ano = pd.DataFrame({
-    'Ano': anos_lista,
-    'Assunto': assuntos_lista
-})
-
-for ano in df_assuntos_ano['Ano'].unique():
-    assuntos_values = df_assuntos_ano[(
-                      df_assuntos_ano['Ano'] == ano)]['Assunto'].value_counts()
-    assuntos_filtrados = assuntos_values.loc[assuntos_values.values > 9]
-    title = "Principais Assuntos CNJ do Ano {}".format(ano)
-    fig = plt.figure()
-    assuntos_filtrado.plot.barh(title=title, edgecolor='black', color='y')
-    fig.savefig('figures/{}'.format(title), dpi=100, bbox_inches='tight')
-
-# %% markdown
-# ### Andamento
-# %%
-numeros_aux = []
-data_inicio_aux = []
-data_fim_aux = []
-duracao_aux = []
-
-for numero in df_andamentos_totais['numero'].unique():
-    lista = list(df_andamentos_totais[(
-                 df_andamentos_totais['numero'] == int(numero))]['data'])
-    lista = [datetime.strptime(lista[i], "%d/%m/%Y %H:%M:%S") for i in range(len(lista))]
-
-    if max(lista).year != 2019:
-        duracao = abs(lista[0] - lista[-1]).days
-
-        numeros_aux.append(numero)
-        data_inicio_aux.append(min(lista))
-        data_fim_aux.append(max(lista))
-        duracao_aux.append(duracao)
-
-duracao_andamentos = pd.DataFrame({
-    'Numero': numeros_aux,
-    'Data Inicio': data_inicio_aux,
-    'Data Fim': data_fim_aux,
-    'Duracao (em dias)': duracao_aux
-})
-
-# %% markdown
-# ### Frequência de processos de viol. cont. mulher por ano
-# %%
-
-
-def autolabel(rects, xpos='center'):
+# Helper para ajudar no plot de graficos
+def autolabel(rects, xpos='center', ax=None):
     """
     Attach a text label above each bar in *rects*, displaying its height.
 
@@ -195,29 +55,173 @@ def autolabel(rects, xpos='center'):
                     ha=ha[xpos], va='bottom')
 
 
-anos_frequencia = pd.DataFrame({
-    'Ano': [2014, 2015, 2016, 2017, 2018],
-    'Proc_ano': [18466, 17366, 11605, 12519, 15075],
-    'Proc_vcm': [407, 972, 1111, 2169, 3786]
-})
+def paths_datasets():
+    local_raiz = 'database/'
 
-anos_frequencia
+    return list(Path(local_raiz).glob('*'))
 
-anos_frequencia['Proc_vcm'].describe()
 
-ind = np.arange(len(anos_frequencia['Proc_vcm']))  # the x locations for the groups
-width = 0.35  # the width of the bars
+def read_datasets(locais_anos):
+    processos_anos = []
+    andamentos_anos = []
+    assuntos_anos = []
 
-fig, ax = plt.subplots()
-rects1 = ax.bar(ind - width/2, anos_frequencia['Proc_ano'], width, label='Proc')
-rects2 = ax.bar(ind + width/2, anos_frequencia['Proc_vcm'], width, label='VCM')
+    for local in locais_anos:
+        processos_anos.append(list(Path(local).glob('*_recife.csv'))[0])
+        andamentos_anos.append(list(Path(local).glob('*_andamentos.csv'))[0])
+        assuntos_anos.append(list(Path(local).glob('*_assuntos.csv'))[0])
 
-ax.set_ylabel('Num Processos')
-ax.set_xticks(ind)
-ax.set_xticklabels(anos_frequencia['Ano'])
-ax.legend()
-autolabel(rects1, "center")
-autolabel(rects2, "center")
+    df_processos = [pd.read_csv(str(processo)) for processo in processos_anos]
+    df_andamentos = [pd.read_csv(str(andamento)) for andamento in andamentos_anos]
+    df_assuntos = [pd.read_csv(str(assunto)) for assunto in assuntos_anos]
 
-plt.show()
-fig.savefig('figures/processos_anos', dpi=100, bbox_inches='tight')
+    return (pd.concat(df_processos), pd.concat(df_andamentos),
+            pd.concat(df_assuntos))
+
+
+def save_grafico(grafico, title):
+    fig = plt.figure()
+    grafico.plot.barh(title=title, edgecolor='black', color='y')
+    if title is None:
+        import ipdb; ipdb.set_trace()
+    fig.savefig('figures/{}'.format(title), dpi=100, bbox_inches='tight')
+
+
+def save_tabela(dados, title, col_width):
+    fig = plt.figure()
+    ax, fig = render_table(dados, header_columns=0, col_width=col_width)
+    fig.savefig('figures/'.format(title), dpi=100, bbox_inches='tight')
+
+
+def classe_cnj_analise(df_processos_totais):
+    classe_cnj = df_processos_totais['Classe CNJ']
+
+    save_grafico(classe_cnj.value_counts(), title='Frequência das Classes CNJ')
+
+    save_tabela(dados=df_assuntos_totais.iloc[:, 1:].head(n=7),
+                title='assuntos_totais_pt1', col_width=5)
+    save_tabela(dados=df_processos_totais.iloc[:, 3:].head(n=7),
+                title='processos_totais_pt2', col_width=3.5)
+
+
+def assunto_analise(df_assuntos_totais):
+    assuntos = df_assuntos_totais['Assunto']
+
+    assuntos_valor = assuntos.value_counts()
+    assuntos_filtrado_index = assuntos_valor.iloc[
+                              assuntos_valor.values > 9].index
+    assuntos_filtrado_values = assuntos_valor.iloc[
+                               assuntos_valor.values > 9].values
+
+    assuntos_filtrado = pd.DataFrame({
+        'Assunto': assuntos_filtrado_index,
+        'Frequência': assuntos_filtrado_values
+    })
+
+    save_tabela(dados=assuntos_filtrado, title='assuntos_filtrados',
+                col_width=7.5)
+
+    save_grafico(grafico=assuntos_filtrado,
+                 title='Assuntos CNJ com mais de 10 aparições')
+
+
+# TODO: Realizar uma analise com esses dados
+def duracao_andamentos(numeros_aux, data_inicio_aux, data_fim_aux,
+                       duracao_aux):
+    duracao_andamentos = pd.DataFrame({
+        'Numero': numeros_aux,
+        'Data Inicio': data_inicio_aux,
+        'Data Fim': data_fim_aux,
+        'Duracao (em dias)': duracao_aux
+    })
+
+
+def andamentos_analise(df_andamentos_totais):
+    numeros_aux = []
+    data_inicio_aux = []
+    data_fim_aux = []
+    duracao_aux = []
+
+    for numero in df_andamentos_totais['numero'].unique():
+        lista = list(df_andamentos_totais[(
+                     df_andamentos_totais['numero'] == int(numero))]['data'])
+        lista = [datetime.strptime(lista[i], "%d/%m/%Y %H:%M:%S") for i in range(len(lista))]
+
+        if max(lista).year != 2019:
+            duracao = abs(lista[0] - lista[-1]).days
+
+            numeros_aux.append(numero)
+            data_inicio_aux.append(min(lista))
+            data_fim_aux.append(max(lista))
+            duracao_aux.append(duracao)
+
+    duracao_andamentos(numeros_aux, data_inicio_aux, data_fim_aux, duracao_aux)
+
+
+def relacao_anos_processos():
+    anos_frequencia = pd.DataFrame({
+        'Ano': [2014, 2015, 2016, 2017, 2018],
+        'Proc_ano': [18466, 17366, 11605, 12519, 15075],
+        'Proc_vcm': [407, 972, 1111, 2169, 3786]
+    })
+
+    ind = np.arange(len(anos_frequencia['Proc_vcm']))
+    width = 0.35
+
+    fig, ax = plt.subplots()
+    rects1 = ax.bar(ind - width/2, anos_frequencia['Proc_ano'], width,
+                    label='Proc')
+    rects2 = ax.bar(ind + width/2, anos_frequencia['Proc_vcm'], width,
+                    label='VCM')
+
+    ax.set_ylabel('Num Processos'); ax.set_xticks(ind)
+    ax.set_xticklabels(anos_frequencia['Ano']); ax.legend()
+    autolabel(rects1, "center", ax); autolabel(rects2, "center", ax)
+
+    fig.set_size_inches(7.5, 6.5, forward=True)
+    fig.savefig('figures/processos_anos', dpi=100, bbox_inches='tight')
+    plt.show()
+
+
+def anos_assuntos(anos, assuntos):
+    df_assuntos_ano = pd.DataFrame({
+        'Ano': anos,
+        'Assunto': assuntos
+    })
+
+    for ano in df_assuntos_ano['Ano'].unique():
+        assuntos_values = df_assuntos_ano[
+                          (df_assuntos_ano['Ano'] == ano)]['Assunto'].value_counts()
+        assuntos_filtrados = assuntos_values.loc[assuntos_values.values > 9]
+
+        save_grafico(grafico=assuntos_filtrados,
+                     title='Principais Assuntos CNJ do Ano {}'.format(ano))
+
+
+def anos_frequencia(df_assuntos_totais):
+    anos_lista = []
+    assuntos_lista = []
+
+    for processo in df_assuntos_totais['Numero'].unique():
+        df_assun = df_assuntos_totais[(df_assuntos_totais['Numero'] == processo)]
+        assuntos = df_assun['Assunto'].values
+        processo_corrigido = str(processo).zfill(20)
+        ano = re.match('\d{9}(\d{4})', processo_corrigido).group(1)
+
+        for assunto in assuntos:
+            assuntos_lista.append(assunto)
+            anos_lista.append(ano)
+
+    anos_assuntos(anos_lista, assuntos_lista)
+
+
+if __name__ == '__main__':
+    locais_anos = paths_datasets()
+    df_processos_totais, df_andamentos_totais, df_assuntos_totais = read_datasets(locais_anos)
+
+    classe_cnj_analise(df_processos_totais)
+    assunto_analise(df_assuntos_totais)
+    andamentos_analise(df_andamentos_totais)
+    anos_frequencia(df_assuntos_totais)
+
+    relacao_anos_processos()

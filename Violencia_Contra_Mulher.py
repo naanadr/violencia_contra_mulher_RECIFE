@@ -82,8 +82,6 @@ def read_datasets(locais_anos):
 def save_grafico(grafico, title):
     fig = plt.figure()
     grafico.plot.barh(title=title, edgecolor='black', color='y')
-    if title is None:
-        import ipdb; ipdb.set_trace()
     fig.savefig('figures/{}'.format(title), dpi=100, bbox_inches='tight')
 
 

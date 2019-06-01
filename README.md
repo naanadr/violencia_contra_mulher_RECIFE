@@ -1,8 +1,12 @@
 # Violência contra a mulher no estado de PE
 *trabalho em andamento*
 
-### Aqui você irá encontrar uma breve análise dos casos de violência contra a mulher ocorridos no estado de PE entre os anos de 2011 e 2018.
-Os dados foram adquiridos na API fornecida pelo TJPE.
+### Aqui você irá encontrar uma breve análise dos casos de violência contra a mulher ocorridos no estado de PE
+Os dados foram adquiridos utilizando a API fornecida pelo TJPE.
+
+Foram realizados a captura dos processos fisícos presentes na 1ª vara da capital do recife, nos anos de 2011 ate 2018.
+
+![Total de processos analisados](figures/processos_anos.png)
 
 -----------
 ### Links úteis:

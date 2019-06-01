@@ -28,6 +28,7 @@ Foram realizados a captura dos processos fisícos presentes na 1ª vara da capit
 * [Relógios da Violência](http://www.relogiosdaviolencia.com.br/#)
 * [Justiça de Saia](http://www.justicadesaia.com.br/)
   * [Cartilha mapa da violência contra a mulher](http://www.justicadesaia.com.br/cartilha-mapa-da-violencia-contra-a-mulher-2018/) -> Dados obtidos a partir de 140 mil nóticias, onde 68mil foram relacionadas a casos de violência contra a mulher ao longo de 2018.
+* [Panorama da Violência contra as mulheres no Brasil no ano de 2018](http://www.senado.gov.br/institucional/datasenado/omv/indicadores/relatorios/BR-2018.pdf)
   
 ----------------
 ### Notícias:

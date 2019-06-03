@@ -9,6 +9,16 @@ Foram realizados a captura dos processos fisícos presentes na 1ª vara da capit
 ![Total de processos analisados](figures/processos_anos.png)
 
 -----------
+### Apresentações:
+* [Apresentação PyLadies Day 2019](https://slides.com/fernandasouza/pyladies/#/)
+
+
+-----------
+### DataSet:
+* [DataSet no OneDrive](https://1drv.ms/u/s!AnG-MZJMLiVdxewqfzYpd4j0Q7G_Cw?e=sAQX8g) -> Link provisorio, contém todos os processos da comarca de Recife nos anos de 2011 até 2018.
+
+
+-----------
 ### Links úteis:
 * [Manual WerbService do TJPE](http://www.tjpe.jus.br/consulta/processual/1grau/manuais)
 * [Consulta de processos físicos e eletrônicos, 1ª ou 2ª Grau no TJPE](https://srv01.tjpe.jus.br/consultaprocessualunificada/processo/)

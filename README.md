@@ -2,20 +2,24 @@
 *trabalho em andamento*
 
 ### Aqui você irá encontrar uma breve análise dos casos de violência contra a mulher ocorridos no estado de PE
-Os dados foram adquiridos utilizando a API fornecida pelo TJPE.
+### Algumas informações iniciais:
+* Atualmente o foco do trabalho está na cidade do Recife, depois será realizado a analise da RMR, para por fim seguir para as outras mesoregiões do estado;
+* A captura das informações dos processos foi realizada utilizando a API fornecida pelo TJPE;
+* Os números dos processos (NPUs) foram obtidos junto ao TJPE. 
+  * Não será disponibilizado os números, pois alguns processos estão em segredo de justiça.
+  * Se for do seu desejo ter em maões os números dos processos, entre em contato com a [Ouvidoria do TJPE](http://www.tjpe.jus.br/web/ouvidoria) informando com qual objetivo você utilizará esses números e suas informações pessoais.
+* Os processos aqui analisados estão relacionados ao tema **violência doméstica contra a mulher**.
+  * Processos a partir do ano de 2006, pois foi o ano de entrada em vigor da **Lei Maria da Penha**, até o ano de 2018.
 
-Foram realizados a captura dos processos fisícos presentes na 1ª vara da capital do recife, nos anos de 2011 ate 2018.
+------------
+### Recife
+![Total de processos analisados](figures/Processos_na_comarca_0001_(Recife).png)
 
-![Total de processos analisados](figures/processos_anos.png)
 
 -----------
 ### Apresentações:
 * [Apresentação PyLadies Day 2019](https://slides.com/fernandasouza/pyladies/#/)
-
-
------------
-### DataSet:
-* [DataSet no OneDrive](https://1drv.ms/u/s!AnG-MZJMLiVdxewqfzYpd4j0Q7G_Cw?e=sAQX8g) -> Link provisorio, contém todos os processos da comarca de Recife nos anos de 2011 até 2018.
+* [Apresentação Python Nordeste 2019](https://slides.com/fernandasouza/pythonne2019/live#/)
 
 
 -----------

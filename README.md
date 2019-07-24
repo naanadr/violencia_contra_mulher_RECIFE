@@ -13,8 +13,9 @@
 
 ------------
 ### Recife
-![Total de processos analisados](figures/Processos_na_comarca_0001_(Recife).png)
+![Total de processos analisados](figures/Processos_totais_utilizados.png)
 
+Quantidade total de processos utilizados nessa pesquisa.
 
 -----------
 ### Apresentações:

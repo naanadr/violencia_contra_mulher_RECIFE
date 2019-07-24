@@ -7,7 +7,7 @@
 * A captura das informações dos processos foi realizada utilizando a API fornecida pelo TJPE;
 * Os números dos processos (NPUs) foram obtidos junto ao TJPE. 
   * Não será disponibilizado os números, pois alguns processos estão em segredo de justiça.
-  * Se for do seu desejo ter em maões os números dos processos, entre em contato com a [Ouvidoria do TJPE](http://www.tjpe.jus.br/web/ouvidoria) informando com qual objetivo você utilizará esses números e suas informações pessoais.
+  * Se for do seu desejo ter em mãos os números dos processos, entre em contato com a [Ouvidoria do TJPE](http://www.tjpe.jus.br/web/ouvidoria) informando com qual objetivo você utilizará esses números e suas informações pessoais.
 * Os processos aqui analisados estão relacionados ao tema **violência doméstica contra a mulher**.
   * Processos a partir do ano de 2006, pois foi o ano de entrada em vigor da **Lei Maria da Penha**, até o ano de 2018.
 

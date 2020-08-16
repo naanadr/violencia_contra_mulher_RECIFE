@@ -1,4 +1,4 @@
 .ipynb*
 
-database/
 helpers/
+pandas_analises/database/

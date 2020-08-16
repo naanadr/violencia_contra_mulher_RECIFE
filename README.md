@@ -21,6 +21,7 @@ Quantidade total de processos utilizados nessa pesquisa.
 ### Apresentações:
 * [Apresentação PyLadies Day 2019](https://slides.com/fernandasouza/pyladies/#/)
 * [Apresentação Python Nordeste 2019](https://slides.com/fernandasouza/pythonne2019/live#/)
+* [Apresentação Python Brasil 2019](https://slides.com/fernandasouza/pybr2019#/)
 
 
 -----------

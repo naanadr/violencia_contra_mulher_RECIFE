@@ -1,0 +1,25 @@
+.header-panel {
+    background-color: #a31018 ;
+    font-family: roboto;
+}
+
+body {
+  font-family: roboto;
+  color: #000000;
+}
+
+.pages h1 {
+  color: #E40019;
+}
+
+.nav-tabs {
+    background: #a31018;
+}
+
+a, a:focus, a:hover {
+    color: #730208;
+}
+
+.pages .nav-tabs>li.active>a {
+    background-color: #730208 !important;
+}
